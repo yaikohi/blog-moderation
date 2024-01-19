@@ -1,13 +1,7 @@
 import cors from "@elysiajs/cors";
 import { Elysia, t } from "elysia";
-import { CommentType, EventType } from "./types";
-
-// --- SERVICES -- PORTS
-const PORT_EVENTBUS = `4005`;
-// --- SERVICES -- HOSTS
-const HOST_EVENTBUS = `event-bus-srv`;
-// --- URLS
-export const URL_EVENTBUS = `http://${HOST_EVENTBUS}:${PORT_EVENTBUS}/events`;
+import { CommentType } from "./types";
+import { sendCommentModeratedEvent } from "./utils";
 
 // --- CONFIG
 const PORT = 4003;
@@ -78,23 +72,3 @@ app
 console.log(
   `🦊 Elysia is running the 'moderation' service at ${app.server?.hostname}:${app.server?.port}`,
 );
-
-export async function sendCommentModeratedEvent(
-  { comment, postId }: { comment: CommentType; postId: string },
-) {
-  const event: EventType = {
-    type: "comment.moderated",
-    data: {
-      comment,
-      postId,
-    },
-  };
-
-  await fetch(URL_EVENTBUS, {
-    method: "POST",
-    body: JSON.stringify(event),
-    headers: {
-      "Content-Type": "application/json",
-    },
-  });
-}
