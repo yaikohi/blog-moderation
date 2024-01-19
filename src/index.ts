@@ -45,7 +45,13 @@ app
             comment: moderatedComment,
             postId: postId,
           });
+          set.status = "OK";
         }
+        set.status = "Not Implemented";
+        return {
+          success: false,
+          message: `No event handler created for ${type}`,
+        };
       }, {
         body: t.Object({
           type: t.Union([
